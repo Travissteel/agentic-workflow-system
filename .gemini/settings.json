@@ -1,0 +1,37 @@
+{
+  "orchestrator": {
+    "contextFile": ".gemini/GEMINI.md",
+    "model": "gemini-2.5-pro",
+    "description": "Master orchestrator that manages project state, creates todos, and delegates to subagents"
+  },
+  "agents": {
+    "coder": {
+      "contextFile": ".gemini/agents/coder.md",
+      "model": "gemini-2.5-pro",
+      "description": "Implementation specialist that writes code to fulfill specific todo items",
+      "capabilities": ["read", "write", "edit", "search", "terminal"]
+    },
+    "tester": {
+      "contextFile": ".gemini/agents/tester.md",
+      "model": "gemini-2.5-flash",
+      "description": "Visual testing specialist that verifies implementations using browser automation",
+      "capabilities": ["read", "terminal", "browser"]
+    },
+    "stuck": {
+      "contextFile": ".gemini/agents/stuck.md",
+      "model": "gemini-2.5-flash",
+      "description": "Human escalation agent that gets user input when problems occur",
+      "capabilities": ["read", "search", "terminal", "askUser"]
+    }
+  },
+  "availableModels": {
+    "gemini-2.5-pro": "Most capable, best for complex reasoning and orchestration",
+    "gemini-2.5-flash": "Fast and efficient, good for testing and escalation"
+  },
+  "rules": {
+    "noFallbacks": true,
+    "alwaysTest": true,
+    "humanInLoop": true,
+    "oneTaskAtATime": true
+  }
+}
