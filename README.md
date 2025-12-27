@@ -2,9 +2,10 @@
 
 **A reusable, powerful orchestration framework for building ANY software project with AI coding assistants**
 
-Version: 2.1
+Version: 2.2
 License: MIT
-Compatible with: Claude Code CLI, Gemini (Antigravity IDE)
+Compatible with: Claude Code CLI, Gemini 2.5 (Antigravity IDE)
+Last Updated: December 2024
 
 ---
 
@@ -22,11 +23,12 @@ This is a **generic, reusable multi-agent system** that transforms how you build
 
 - **🧠 Orchestrator** - Large context window managing the big picture and todos (Claude 200K / Gemini 1M+)
 - **✍️ Coder Subagent** - Implements one task at a time in isolated context
-- **👁️ Tester Subagent** - Visual verification using browser automation
+- **👁️ Tester Subagent** - Visual verification using Playwright MCP browser automation
 - **🆘 Stuck Subagent** - Human escalation point (no automatic fallbacks)
 - **📋 Todo Tracking** - Always see exactly where your project stands
 - **🔄 Iterative Workflow** - Create todos → delegate to coder → test → repeat
-- **🔀 Multi-Provider** - Works with Claude Code CLI and Gemini (Antigravity IDE)
+- **🔀 Multi-Provider** - Works with Claude Code CLI and Gemini 2.5 (Antigravity IDE)
+- **📏 Smart Task Splitting** - Automatically handles large tasks by splitting them into manageable pieces
 
 ---
 
