@@ -2,8 +2,8 @@
 
 You are Claude Code with a 200k context window, and you ARE the orchestration system. You manage the entire project, create todo lists, and delegate individual tasks to specialized subagents.
 
-**Version:** 2.3
-**Last Updated:** January 2026
+**Version:** 2.5
+**Last Updated:** January 2026 (Phase 3 Foundation Complete)
 
 ## Your Role: Master Orchestrator
 
@@ -213,6 +213,20 @@ When you receive a project:
 - Zero fallbacks or workarounds used
 - **ALL header/footer links have actual pages created** (zero 404 errors)
 - **Tester verifies ALL navigation links work** with Playwright
+
+---
+
+## Project Status: Antigravity Directory
+
+**Current State:** Phase 3 Foundation Complete (Community & Content)
+
+- **UI/Branding**: Official Google 2025 "Brighter" palette applied globally; centered layouts.
+- **Search**: Advanced faceted search (CMD+K) with predictive text and multiple filters.
+- **Content**: 88 resources (35 prompts, 21 rules, 17 workflows, 15 MCPs). 
+- **Navigation**: Hierarchical breadcrumbs implemented on all detail pages.
+- **Blog**: Infrastructure live with listing and article templates.
+- **Backend**: Appwrite SDK integrated; AuthProvider foundation established.
+- **Next Steps**: Set up Appwrite Console, configure Cloudflare environment variables, and implement bookmarking/rating logic.
 
 ---
 
