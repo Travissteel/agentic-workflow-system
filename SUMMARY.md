@@ -1,6 +1,6 @@
 # Agentic Workflow System - Quick Summary
 
-**Version:** 2.2 | **Updated:** December 2024
+**Version:** 2.3 | **Updated:** January 2026
 
 ## What It Does
 
@@ -63,11 +63,17 @@ claude  # or use Antigravity IDE
 
 ## Proven Results
 
-Successfully built the **Antigravity Directory** (Next.js 14, TypeScript, Tailwind, Shadcn UI) with:
-- 40 pages generated
-- Zero 404 errors
-- Safety scoring system
-- Full visual test coverage
+Successfully built the **Antigravity Directory** (Next.js 14, TypeScript, Tailwind, Shadcn UI):
+
+| Metric | Result |
+|--------|--------|
+| Total Resources | 86 (35 prompts, 21 rules, 15 workflows, 15 MCPs) |
+| Pages Generated | 90+ static pages |
+| 404 Errors | Zero |
+| Safety Scoring | Every item analyzed |
+| Test Coverage | Full visual verification |
+
+**Repository:** https://github.com/Travissteel/antigravitydirectory
 
 ---
 
