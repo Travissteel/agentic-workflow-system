@@ -190,16 +190,115 @@ When you're ready to deploy a workflow to the cloud:
 - Document the endpoint and authentication
 - Client now has visual workflow with agentic power!
 
-#### The "Shadow Orchestrator" Pattern (Advanced)
+#### Deployment Strategy: Choose Your Approach
 
-For mission-critical deployments that need resilience:
+Phase 5 supports **two deployment strategies** depending on your needs:
 
-- **Primary Path**: No-code trigger → Modal endpoint → No-code action
-- **Fallback Path**: If Modal fails → Error sent to "Agentic Support" endpoint
-- **Recovery**: Local agent diagnoses error, fixes, redeploys
-- **Notification**: Human notified only if agent can't auto-fix
+##### Strategy 1: Standard Hybrid Wrapper (Recommended for Most Projects)
 
-This creates self-healing workflows that escalate to humans only when necessary.
+**Self-Annealing**: Local only (Phase 3-4)
+**Production**: Static, battle-tested Modal endpoint
+
+```
+Local: BUILD → TEST → SELF-ANNEAL → Deploy
+Cloud: Static endpoint (proven, stable)
+```
+
+**When to use:**
+- ✅ Most client handoffs
+- ✅ Lower-risk projects
+- ✅ Workflows with stable requirements
+- ✅ When simplicity is preferred
+
+**Pros:**
+- Simple, predictable
+- No production auto-modification risk
+- Client gets proven solution
+- Easy to maintain
+
+**Cons:**
+- Can't learn from production errors
+- Manual update cycle for fixes
+
+##### Strategy 2: Shadow Orchestrator (Advanced Self-Healing)
+
+**Self-Annealing**: Local (Phase 3-4) + Production (continuous)
+**Production**: Living system that fixes itself
+
+```
+Production Error → Diagnose → Auto-Fix (safe) OR Escalate (critical)
+                           ↓
+                    Update Directive → Redeploy
+```
+
+**When to use:**
+- ✅ High-volume production workflows
+- ✅ Mission-critical applications
+- ✅ Long-running deployments
+- ✅ Workflows with evolving requirements
+
+**Pros:**
+- Learns from production errors
+- Self-healing (auto-fixes non-critical issues)
+- Continuous improvement
+- Reduces manual intervention
+
+**Cons:**
+- Higher complexity
+- Risk of auto-fixing incorrectly (mitigated by graduated response)
+- Requires sophisticated monitoring
+
+#### The Shadow Orchestrator Pattern (Strategy 2 Details)
+
+For deployments that need production self-annealing:
+
+**Three-Tier Error Handling:**
+
+1. **Tier 1: Known Errors (Auto-Fix)**
+   - Input validation, rate limiting, timeouts
+   - Agentic Support handles automatically
+   - No human needed
+
+2. **Tier 2: Unknown Errors (Diagnose & Decide)**
+   - New patterns, unexpected issues
+   - Agentic Support analyzes first
+   - Auto-fix if safe, else escalate
+
+3. **Tier 3: Critical Errors (Human-in-the-Loop)**
+   - Data corruption, security, business logic
+   - Always escalate to stuck agent
+   - Human decides on fix
+
+**How It Works:**
+
+```
+┌──────────────────────────────────────────┐
+│  Primary Modal Endpoint (Production)    │
+│         ↓ (error occurs)                 │
+│  Error Classification                    │
+│         ↓                                │
+│  ┌──────────┴──────────┐               │
+│  ↓                      ↓                │
+│  Non-Critical    Critical Error         │
+│  ↓                      ↓                │
+│  Agentic Support  Human Escalation      │
+│  (Auto-Fix)       (Stuck Agent)         │
+│  ↓                      ↓                │
+│  Update Directive  Wait for Decision    │
+│  ↓                      ↓                │
+│  Redeploy          Apply Fix            │
+└──────────────────────────────────────────┘
+```
+
+**Components:**
+- **Primary Endpoint**: Your workflow with error classification
+- **Agentic Support Endpoint**: Diagnosis and auto-fixing engine
+- **Stuck Agent Integration**: Human escalation path
+- **GitHub Integration**: Automatic directive updates
+
+**Available Subagents:**
+- **`deployer`**: Deploy standard or Shadow Orchestrator endpoints
+- **`support`**: Diagnose and auto-fix production errors (Shadow only)
 
 #### Handoff Options Comparison
 
@@ -246,9 +345,10 @@ Before marking cloudifying complete:
 - [ ] Complete handover package delivered
 - [ ] Client documentation provided
 
-**See**: `directives/hybrid-wrapper-deployment.md` for the complete deployment workflow.
+**See**: `directives/hybrid-wrapper-deployment.md` for the complete deployment workflow (Strategy 1).
 
 **See also**:
+- `directives/shadow-orchestrator.md` - Production self-annealing pattern (Strategy 2)
 - `directives/modal-endpoint-guide.md` - Guide for building Modal endpoints
 - `templates/modal_app_template.py` - Python template for Modal applications
 
@@ -298,6 +398,18 @@ Before marking cloudifying complete:
 - **On error**: Will invoke stuck agent automatically
 - **Important**: Only invoke after Phase 3-4 (build + test) are complete
 - **Output**: Ready-to-use Hybrid Wrapper setup for n8n integration
+
+### support
+**Purpose**: Production error diagnosis and auto-fixing for Shadow Orchestrator (the "Production Self-Annealing" layer)
+
+- **When to invoke**: ONLY for Shadow Orchestrator deployments (Strategy 2) - NOT for standard deployments
+- **What to pass**: Production error report with context
+- **Context**: Gets its own clean context window for error analysis
+- **Returns**: Diagnosis + fix decision (auto-fix or escalate)
+- **Model**: Uses Opus (not Sonnet) for complex error analysis
+- **On critical error**: Will invoke stuck agent automatically
+- **Important**: Only used in production, not during local development
+- **Output**: Auto-fixed endpoint OR human escalation with GitHub issue
 
 ## CRITICAL RULES FOR YOU
 
@@ -406,6 +518,7 @@ YOU report final results to USER with n8n setup
 **Coder's fresh context** = Clean slate for implementing one task (the "Execution" layer)
 **Tester's fresh context** = Clean slate for verifying one task (the "Validation" layer)
 **Deployer's fresh context** = Clean slate for cloudifying workflows (the "Cloudification" layer)
+**Support's fresh context** = Clean slate for diagnosing production errors (the "Production Self-Annealing" layer - Shadow only)
 **Stuck's context** = Problem + human decision (the "Human-in-the-Loop")
 
 Each subagent gets a focused, isolated context for their specific job!
