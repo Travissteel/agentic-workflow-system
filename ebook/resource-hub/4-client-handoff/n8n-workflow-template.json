@@ -1,0 +1,218 @@
+{
+  "name": "Hybrid Wrapper Workflow Template",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-endpoint",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 300],
+      "webhookId": "generate-unique-id"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-username--app-name-function-name.modal.run",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "field1",
+              "value": "={{ $json.body.field1 }}"
+            },
+            {
+              "name": "field2",
+              "value": "={{ $json.body.field2 }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "http-request-modal",
+      "name": "Call Modal Endpoint",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [450, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Modal Bearer Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.success }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "if-success",
+      "name": "Check Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@yourdomain.com",
+        "toEmail": "={{ $json.body.email }}",
+        "subject": "Success: Your Request Was Processed",
+        "emailFormat": "html",
+        "text": "=<h2>Success!</h2>\n<p>Your request has been processed successfully.</p>\n<p><strong>Result:</strong> {{ $json.data }}</p>",
+        "options": {}
+      },
+      "id": "send-success-email",
+      "name": "Send Success Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [850, 200],
+      "credentials": {
+        "smtp": {
+          "id": "2",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "errors@yourdomain.com",
+        "toEmail": "admin@yourdomain.com",
+        "subject": "Error: Workflow Failed",
+        "emailFormat": "html",
+        "text": "=<h2>Workflow Error</h2>\n<p><strong>Error Message:</strong> {{ $json.error }}</p>\n<p><strong>Input Data:</strong> {{ $json.body }}</p>",
+        "options": {}
+      },
+      "id": "send-error-email",
+      "name": "Send Error Alert",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [850, 400],
+      "credentials": {
+        "smtp": {
+          "id": "2",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"message\": \"Workflow completed successfully\" } }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "webhook-response-success",
+      "name": "Webhook Response (Success)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": false, \"message\": \"Workflow failed\", \"error\": $json.error } }}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "id": "webhook-response-error",
+      "name": "Webhook Response (Error)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1050, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Call Modal Endpoint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Modal Endpoint": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Success": {
+      "main": [
+        [
+          {
+            "node": "Send Success Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Error Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Success Email": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response (Success)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Error Alert": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response (Error)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-02-14T00:00:00.000Z",
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "your-instance-id"
+  }
+}

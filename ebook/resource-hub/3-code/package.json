@@ -1,0 +1,43 @@
+{
+  "name": "doe-framework-mcp-tools",
+  "version": "1.0.0",
+  "description": "Model Context Protocol tools for the Directive Orchestration Execution (DOE) framework",
+  "type": "module",
+  "scripts": {
+    "install-mcp": "npm install -g @modelcontextprotocol/server-playwright @modelcontextprotocol/server-brave-search @modelcontextprotocol/server-filesystem @modelcontextprotocol/server-github @modelcontextprotocol/server-memory",
+    "install-optional": "npm install -g @modelcontextprotocol/server-gdrive @modelcontextprotocol/server-slack @modelcontextprotocol/server-postgres",
+    "test-playwright": "npx @modelcontextprotocol/server-playwright --help",
+    "list-servers": "npm list -g --depth=0 | grep @modelcontextprotocol"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "doe-framework",
+    "agentic-workflows",
+    "automation"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/server-playwright": "^0.6.2",
+    "@modelcontextprotocol/server-brave-search": "^0.6.2",
+    "@modelcontextprotocol/server-filesystem": "^0.6.2",
+    "@modelcontextprotocol/server-github": "^0.6.2",
+    "@modelcontextprotocol/server-memory": "^0.6.2"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {
+    "@modelcontextprotocol/server-gdrive": "^0.6.2",
+    "@modelcontextprotocol/server-slack": "^0.6.2",
+    "@modelcontextprotocol/server-postgres": "^0.6.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "author": "DOE Framework",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/doe-framework"
+  },
+  "readme": "README.md"
+}
